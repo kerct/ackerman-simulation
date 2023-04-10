@@ -4,4 +4,6 @@ cd `echo $ACKERMANN_WS`
 
 source devel/setup.bash
 
-rosrun rviz rviz
+rosrun ackermann solver &
+rosrun rviz rviz &
+wait
