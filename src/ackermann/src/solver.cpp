@@ -1,17 +1,14 @@
 #include "ros/ros.h"
 #include <geometry_msgs/PoseStamped.h>
-#include <visualization_msgs/Marker.h>
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   ros::init(argc, argv, "solver");
   ros::NodeHandle nh;
   ros::Rate loop_rate(10);
 
-  // TODO
   ros::Publisher pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 1, true);
-  // ros::Publisher marker_pub = nh.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
+  // TODO get inputs
   double l = 2;
   double w = 1;
   double speed = 1;
@@ -21,8 +18,7 @@ int main(int argc, char **argv)
   geometry_msgs::PoseStamped pose_rbt;
   pose_rbt.header.frame_id = "world";
 
-  while (ros::ok())
-  {
+  while (ros::ok()) {
     // convert quaternion to theta
     auto &q = pose_rbt.pose.orientation;
     double siny_cosp = 2 * (q.w * q.z + q.x * q.y);

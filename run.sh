@@ -4,6 +4,8 @@ cd `echo $ACKERMANN_WS`
 
 source devel/setup.bash
 
+# TODO use roslaunch?
 rosrun rviz rviz &
 rosrun ackermann solver &
+rosrun ackermann visualizer &
 wait
