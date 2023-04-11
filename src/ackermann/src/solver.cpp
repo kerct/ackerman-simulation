@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
   // TODO get inputs
   double l = 2;
   double w = 1;
-  double speed = 1;
+  double speed = 0.01;
   double phi = 0;
 
   // prepare message to publish
