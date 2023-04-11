@@ -10,6 +10,7 @@ project(ackermann)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  geometry_msgs
   visualization_msgs
 )
 
