@@ -32,20 +32,25 @@ int main(int argc, char **argv) {
   geometry_msgs::PoseStamped pose_rbt;
   pose_rbt.header.frame_id = "world";
 
+  double dt;
+  double prev_time = ros::Time::now().toSec();
+
   while (ros::ok()) {
+    dt = ros::Time::now().toSec() - prev_time;
+    if (dt == 0) // ros doesn't tick the time fast enough
+        continue;
+    prev_time += dt;
+
     // convert quaternion to theta
     auto &q = pose_rbt.pose.orientation;
     double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
     double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
     double theta = atan2(siny_cosp, cosy_cosp);
 
-    // TODO
-    double dt = 0.1;
-
     pose_rbt.pose.position.x += speed * cos(theta) * dt;
     pose_rbt.pose.position.y += speed * sin(theta) * dt;
 
-    theta += speed / wheel_base * tan(theta) * dt;
+    theta += speed / wheel_base * tan(phi) * dt;
 
     // convert theta to quaternion
     pose_rbt.pose.orientation.w = cos(theta / 2);
@@ -53,8 +58,6 @@ int main(int argc, char **argv) {
 
     pose_pub.publish(pose_rbt);
     
-    ROS_INFO("Pose(%7.3f, %7.3f, %7.3f)", pose_rbt.pose.position.x, pose_rbt.pose.position.y, theta);
-
     // update topics
     ros::spinOnce();
 
