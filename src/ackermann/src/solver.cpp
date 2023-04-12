@@ -1,18 +1,32 @@
 #include "ros/ros.h"
+#include <geometry_msgs/Twist.h>
 #include <geometry_msgs/PoseStamped.h>
+
+double wheel_base = 2;
+double wheel_separation = 1; // actually not used
+
+double speed = 0;
+double phi = 0;
+void cbVel(const geometry_msgs::Twist::ConstPtr &msg) {
+  // adapted from http://wiki.ros.org/teb_local_planner/Tutorials/Planning%20for%20car-like%20robots 
+  speed = msg->linear.x;
+  double ang_vel = msg->angular.z;
+
+  if (speed == 0 || ang_vel == 0) {
+    phi = 0;
+  } else {
+    double radius = speed / ang_vel;
+    phi = atan(wheel_base / radius);
+  }
+}
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "solver");
   ros::NodeHandle nh;
   ros::Rate loop_rate(10);
 
+  ros::Subscriber vel_cmd = nh.subscribe("cmd_vel", 1, &cbVel);
   ros::Publisher pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 1, true);
-
-  // TODO get inputs
-  double l = 2;
-  double w = 1;
-  double speed = 0.01;
-  double phi = 0;
 
   // prepare message to publish
   geometry_msgs::PoseStamped pose_rbt;
@@ -25,10 +39,13 @@ int main(int argc, char **argv) {
     double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
     double theta = atan2(siny_cosp, cosy_cosp);
 
-    pose_rbt.pose.position.x += speed * cos(theta);
-    pose_rbt.pose.position.y += speed * sin(theta);
+    // TODO
+    double dt = 0.1;
 
-    theta += speed / l * tan(theta);
+    pose_rbt.pose.position.x += speed * cos(theta) * dt;
+    pose_rbt.pose.position.y += speed * sin(theta) * dt;
+
+    theta += speed / wheel_base * tan(theta) * dt;
 
     // convert theta to quaternion
     pose_rbt.pose.orientation.w = cos(theta / 2);
