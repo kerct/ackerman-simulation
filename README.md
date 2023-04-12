@@ -5,8 +5,8 @@ Aim: to create a simulation in RViz for Ackermann steering (WORK IN PROGRESS)
 This code is built and tested on ROS Noetic
 
 1. RViz
-		```bash
-	sudo apt-get install ros-noetic-teleop-twist-keyboard
+	```bash
+	sudo apt-get install ros-noetic-rviz
 	```
 1. teleop_twist_keyboard
 	```bash
