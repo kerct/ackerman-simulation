@@ -32,13 +32,15 @@ int main(int argc, char **argv) {
   while (ros::ok()) {
     line_strip.header.stamp = ros::Time::now();
 
-    geometry_msgs::Point p;
-    p.x = x;
-    p.y = y;
-    line_strip.points.push_back(p);
+    if (newPose) {
+      geometry_msgs::Point p;
+      p.x = x;
+      p.y = y;
+      line_strip.points.push_back(p);
 
-    marker_pub.publish(line_strip);
-    newPose = false;
+      marker_pub.publish(line_strip);
+      newPose = false;
+    }
 
     // update topics
     ros::spinOnce();
