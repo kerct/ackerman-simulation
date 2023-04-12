@@ -1,5 +1,5 @@
 # ackermann-simulation
-Aim: to create a simulation in RViz for Ackermann steering (WORK IN PROGRESS)
+A simulation in RViz for Ackermann steering
 
 ## Required Packages
 This code is built and tested on ROS Noetic
@@ -36,7 +36,12 @@ chmod +x run.sh
 	```bash
 	./run.sh
 	```
-1. To control the robot, run teleop
+1. To control the robot, start teleop
 	```bash
-	rosrun teleop_twist_keyboard teleop_twist_keyboard.py _speed:=0.2 _turn:=0.5
+	rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+	```
+
+	It is also possible to start with custom values 
+	```bash
+	rosrun teleop_twist_keyboard teleop_twist_keyboard.py _speed:=0.2 _turn:=0.2
 	```
