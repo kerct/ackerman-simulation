@@ -2,8 +2,7 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/PoseStamped.h>
 
-double wheel_base = 2;
-double wheel_separation = 1; // actually not used
+double wheel_base;
 
 double speed = 0;
 double phi = 0;
@@ -24,6 +23,9 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "solver");
   ros::NodeHandle nh;
   ros::Rate loop_rate(10);
+
+  if (!nh.param("wheel_base", wheel_base, 2.0))
+    ROS_WARN(" TMAIN : Param wheel_base not found, set to 2.0");
 
   ros::Subscriber vel_cmd = nh.subscribe("cmd_vel", 1, &cbVel);
   ros::Publisher pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 1, true);

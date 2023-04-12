@@ -41,7 +41,7 @@ chmod +x run.sh
 	rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 	```
 
-	It is also possible to start with custom values 
+	It is also possible to start with custom speeds as such 
 	```bash
 	rosrun teleop_twist_keyboard teleop_twist_keyboard.py _speed:=0.2 _turn:=0.2
 	```
