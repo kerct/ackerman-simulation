@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <nav_msgs/Path.h>
 
 bool path_tracking;
 
@@ -45,17 +46,28 @@ int main(int argc, char **argv) {
     ROS_WARN("PATH_TRACKER: Param close_enough not found, set to 0.1");
   }
 
-  // create path to track
-  std::vector<Position> path;
-  for (int i = 0; i < 10; i++) {
-    Position pt;
-    pt.x = i;
-    pt.y = i * i;
-    path.push_back(pt);
-  }
-
   ros::Subscriber pose_sub = nh.subscribe("pose", 1, &cbPose);
   ros::Publisher twist_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1, true);
+  ros::Publisher path_pub = nh.advertise<nav_msgs::Path>("target_path", 1, true);
+
+  // create path to track
+  nav_msgs::Path nav_path;
+  nav_path.header.frame_id = "world";
+  geometry_msgs::PoseStamped path_pose;
+  std::vector<Position> path;
+  double dx = 0.5;
+  for (int i = 0; i < 10; i++) {
+    Position pt;
+    pt.x = (dx * i);
+    pt.y = (pt.x) * (pt.x);
+    path.push_back(pt);
+
+    path_pose.pose.position.x = pt.x;
+    path_pose.pose.position.y = pt.y;
+    nav_path.poses.push_back(path_pose);
+  }
+
+  path_pub.publish(nav_path);
 
   geometry_msgs::Twist twist_rbt;
 
