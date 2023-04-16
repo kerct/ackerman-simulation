@@ -22,3 +22,6 @@ target_link_libraries(solver ${catkin_LIBRARIES})
 
 add_executable(visualizer src/visualizer.cpp)
 target_link_libraries(visualizer ${catkin_LIBRARIES})
+
+add_executable(path_tracker src/path_tracker.cpp)
+target_link_libraries(path_tracker ${catkin_LIBRARIES})

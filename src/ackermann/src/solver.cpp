@@ -24,10 +24,11 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
   ros::Rate loop_rate(10);
 
-  if (!nh.param("wheel_base", wheel_base, 2.0))
+  if (!nh.param("wheel_base", wheel_base, 2.0)) {
     ROS_WARN(" TMAIN : Param wheel_base not found, set to 2.0");
+  }
 
-  ros::Subscriber vel_cmd = nh.subscribe("cmd_vel", 1, &cbVel);
+  ros::Subscriber twist_sub = nh.subscribe("cmd_vel", 1, &cbVel);
   ros::Publisher pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 1, true);
 
   // prepare message to publish
