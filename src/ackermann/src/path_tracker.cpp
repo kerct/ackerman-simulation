@@ -5,27 +5,63 @@
 
 bool path_tracking;
 
-struct Position {
+class XYVector {
+public:
   double x;
   double y;
+
+  XYVector() {
+    x = 0.0;
+    y = 0.0;
+  }
+
+  XYVector(double x, double y) {
+    this->x = x;
+    this->y = y;
+  }
+
+  XYVector operator+(const XYVector &other) {
+    return XYVector(this->x + other.x, this->y + other.y);
+  }
+
+  XYVector operator-(const XYVector &other) {
+    return XYVector(this->x - other.x, this->y - other.y);
+  }
+
+  XYVector operator*(double s) {
+    return XYVector{this->x * s, this->y * s};
+  }
 };
 
-Position curr_pos;
+XYVector curr_pos;
+double curr_ang;
 void cbPose(const geometry_msgs::PoseStamped::ConstPtr &msg) {
-  curr_pos.x = msg->pose.position.x;
-  curr_pos.y = msg->pose.position.y;
+  auto &p = msg->pose.position;
+  curr_pos.x = p.x;
+  curr_pos.y = p.y;
+
+  auto &q = msg->pose.orientation;
+  double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
+  double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
+  curr_ang = atan2(siny_cosp, cosy_cosp);
 }
 
-double dist_euc(Position p1, Position p2) {
+double dist_euc(XYVector p1, XYVector p2) {
   double dx = p1.x - p2.x;
   double dy = p1.y - p2.y;
   return sqrt(dx * dx + dy * dy);
 }
 
-double heading(Position src, Position tgt) {
+double heading(XYVector src, XYVector tgt) {
   double dx = tgt.x - src.x;
   double dy = tgt.y - src.y;
   return atan2(dy, dx);
+}
+
+double limit_angle(double angle) {
+  // limits from -PI to PI
+  double result = fmod(angle + M_PI, M_PI * 2);
+  return result >= 0 ? result - M_PI : result + M_PI;
 }
 
 int main(int argc, char **argv) {
@@ -54,10 +90,10 @@ int main(int argc, char **argv) {
   nav_msgs::Path nav_path;
   nav_path.header.frame_id = "world";
   geometry_msgs::PoseStamped path_pose;
-  std::vector<Position> path;
-  double dx = 0.5;
+  std::vector<XYVector> path;
+  double dx = 0.2;
   for (int i = 0; i < 10; i++) {
-    Position pt;
+    XYVector pt;
     pt.x = (dx * i);
     pt.y = (pt.x) * (pt.x);
     path.push_back(pt);
@@ -88,9 +124,15 @@ int main(int argc, char **argv) {
       }
     }
 
-    // simple proportional controller, needs more work
-    twist_rbt.linear.x = dist_euc(curr_pos, path[idx]) * 0.2;
-    twist_rbt.angular.z = heading(curr_pos, path[idx]) * 0.1;
+    XYVector target = path[idx];
+    XYVector vec_to_target = target - curr_pos;
+    XYVector heading_to_target{cos(curr_ang), sin(curr_ang)};
+    double pos_err = vec_to_target.x * heading_to_target.x + vec_to_target.y * heading_to_target.y;
+    double ang_err = limit_angle(heading(curr_pos, target) - curr_ang); 
+
+    // simple proportional controller, can be improved
+    twist_rbt.linear.x = pos_err;
+    twist_rbt.angular.z = ang_err;
 
     twist_pub.publish(twist_rbt);
 
