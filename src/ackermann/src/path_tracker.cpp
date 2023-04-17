@@ -3,8 +3,6 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Path.h>
 
-bool path_tracking;
-
 class XYVector {
 public:
   double x;
@@ -69,14 +67,6 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
   ros::Rate loop_rate(10);
 
-  if (!nh.param("path_tracking", path_tracking, false)) {
-    ROS_WARN("PATH_TRACKER: Param path_tracking not found, set to false");
-  }
-
-  if (!path_tracking) {
-    return 0;
-  }
-
   double close_enough;
   if (!nh.param("close_enough", close_enough, 0.1)) {
     ROS_WARN("PATH_TRACKER: Param close_enough not found, set to 0.1");
@@ -119,6 +109,9 @@ int main(int argc, char **argv) {
     if (dist_euc(curr_pos, path[idx]) < close_enough) {
       idx++;
       if (idx == total_pts) {
+        twist_rbt.linear.x = 0.0;
+        twist_rbt.angular.z = 0.0;
+        twist_pub.publish(twist_rbt);
         ROS_INFO("PATH_TRACKER: Path completed");
         return 0;
       }

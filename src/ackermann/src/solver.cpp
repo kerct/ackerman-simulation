@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   ros::Rate loop_rate(10);
 
   if (!nh.param("wheel_base", wheel_base, 2.0)) {
-    ROS_WARN("SOLVER : Param wheel_base not found, set to 2.0");
+    ROS_WARN("SOLVER: Param wheel_base not found, set to 2.0");
   }
 
   ros::Subscriber twist_sub = nh.subscribe("cmd_vel", 1, &cbVel);

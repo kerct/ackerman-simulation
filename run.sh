@@ -8,6 +8,6 @@ source devel/setup.bash
 rosparam load "src/ackermann/config/robot.yaml"
 rosrun rviz rviz -d "src/ackermann/config/rviz_config.rviz" &
 rosrun ackermann solver &
-rosrun ackermann path_tracker &
+if [ "$1" == "track" ]; then rosrun ackermann path_tracker & fi
 rosrun ackermann visualizer &
 wait

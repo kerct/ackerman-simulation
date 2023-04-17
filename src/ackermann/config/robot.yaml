@@ -1,5 +1,4 @@
 wheel_base: 2
 wheel_separation: 1 # currently not used
 
-path_tracking: true
-close_enough: 0.05
+close_enough: 0.05 # for path tracking

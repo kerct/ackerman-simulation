@@ -45,3 +45,13 @@ chmod +x run.sh
 	```bash
 	rosrun teleop_twist_keyboard teleop_twist_keyboard.py _speed:=0.2 _turn:=0.2
 	```
+
+Alternatively, to observe the robot tracking a given path,
+1. Start ROS master
+	```bash
+	roscore
+	```
+1. In another terminal, run the program with 'track' function
+	```bash
+	./run.sh track
+	```
