@@ -5,7 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded: ~
       Splitter Ratio: 0.6495726704597473
-    Tree Height: 653
+    Tree Height: 349
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -125,7 +125,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 12.513192176818848
+      Distance: 8.527390480041504
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -133,9 +133,9 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.1169460117816925
-        Y: 0.01509493961930275
-        Z: -0.24443624913692474
+        X: 1.5142242908477783
+        Y: -0.023214135318994522
+        Z: -0.2360534518957138
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false

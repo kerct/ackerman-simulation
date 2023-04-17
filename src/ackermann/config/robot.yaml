@@ -1,4 +1,9 @@
 wheel_base: 2
 wheel_separation: 1 # currently not used
 
-close_enough: 0.05 # for path tracking
+# for path tracking
+close_enough: 0.05
+Kp_lin: 1
+Kd_lin: 0
+Kp_ang: 0.7
+Kd_ang: 0.1

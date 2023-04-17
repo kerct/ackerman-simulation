@@ -40,8 +40,9 @@ int main(int argc, char **argv) {
 
   while (ros::ok()) {
     dt = ros::Time::now().toSec() - prev_time;
-    if (dt == 0) // ros doesn't tick the time fast enough
-        continue;
+    if (dt == 0) { // ros doesn't tick the time fast enough
+      continue;
+    } 
     prev_time += dt;
 
     // convert quaternion to theta
